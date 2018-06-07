@@ -6,6 +6,8 @@ If ($IsAdministrator) {
 
 function tail { Get-Content $args -Wait }
 
+New-Alias which Get-Command
+
 # Git
 Import-Module posh-git
 
@@ -20,7 +22,7 @@ $loadedKeys = Add-SshKey -l
 ForEach ($item in Get-ChildItem ~/.ssh *.pub) {
 
     $privateKeyName = $item.BaseName
-    if ($loadedKeys -match "$($privateKeyName)") {
+    if ($loadedKeys -match $privateKeyName) {
         # TODO: Why doesn't -not or -notmatch work here?
     } else {
         Add-SshKey ~/.ssh/$($privateKeyName)
