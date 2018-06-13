@@ -13,20 +13,25 @@ Import-Module posh-git
 
 # SSH
 $UsingWindowsSSH = $false
-$AgentRunning = If ($UsingWindowsSSH) { Get-Service ssh-agent -ErrorAction SilentlyContinue } else { Get-SshAgent }
-If (-Not $AgentRunning) {
-    If ($UsingWindowsSSH) { Start-Service ssh-agent } else { Start-SshAgent }
-}
-
-$loadedKeys = Add-SshKey -l
-ForEach ($item in Get-ChildItem ~/.ssh *.pub) {
-
-    $privateKeyName = $item.BaseName
-    if ($loadedKeys -match $privateKeyName) {
-        # TODO: Why doesn't -not or -notmatch work here?
-    } else {
-        Add-SshKey ~/.ssh/$($privateKeyName)
+$AgentInstalled = If ($UsingWindowsSSH) { (-not -not (Get-Service ssh-agent -ErrorAction SilentlyContinue)) } else { Get-SshAgent }
+If ($AgentInstalled) {
+    $AgentRunning = If ($UsingWindowsSSH) { (Get-Service ssh-agent).Status -eq "Running" } else { Get-SshAgent }
+    If (-not $AgentRunning) {
+        If ($UsingWindowsSSH) { Start-Service ssh-agent } else { Start-SshAgent }
     }
+    
+    $loadedKeys = Add-SshKey -l
+    ForEach ($item in Get-ChildItem ~/.ssh *.pub) {
+        
+        $privateKeyName = $item.BaseName
+        if ($loadedKeys -match $privateKeyName) {
+            # TODO: Why doesn't -not or -notmatch work here?
+        } else {
+            Add-SshKey ~/.ssh/$($privateKeyName)
+        }
+    }
+} else {
+    Write-Warning "SSH Agent not found. Skipping ssh key load..."
 }
 
 # Docker
