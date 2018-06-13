@@ -12,27 +12,50 @@ New-Alias which Get-Command
 Import-Module posh-git
 
 # SSH
-$UsingWindowsSSH = $false
-$AgentInstalled = If ($UsingWindowsSSH) { (-not -not (Get-Service ssh-agent -ErrorAction SilentlyContinue)) } else { Get-SshAgent }
-If ($AgentInstalled) {
-    $AgentRunning = If ($UsingWindowsSSH) { (Get-Service ssh-agent).Status -eq "Running" } else { Get-SshAgent }
-    If (-not $AgentRunning) {
-        If ($UsingWindowsSSH) { Start-Service ssh-agent } else { Start-SshAgent }
+function Start-SshWindowsAgent {
+    $Agent = Get-Service ssh-agent -ErrorAction SilentlyContinue
+    If (-not $Agent) { return "Windows SSH Agent Service not found." }
+    If ($Agent.StartType -eq "Disabled") { return "Windows SSH Agent Service found but Disabled." }
+
+    If ($Agent.Status -ne "Running") {
+        Start-Service ssh-agent
     }
+}
+
+function Start-SshPoshAgent {
+    $Agent = Get-SshAgent
+    If (-not $Agent) {
+        Start-SshAgent
+    }
+}
+
+function Start-Ssh {
     
-    $loadedKeys = Add-SshKey -l
-    ForEach ($item in Get-ChildItem ~/.ssh *.pub) {
-        
-        $privateKeyName = $item.BaseName
-        if ($loadedKeys -match $privateKeyName) {
-            # TODO: Why doesn't -not or -notmatch work here?
-        } else {
-            Add-SshKey ~/.ssh/$($privateKeyName)
+    $UsingWindowsSSH = $false
+    If ($UsingWindowsSSH) {
+        $SshStartedError = Start-SshWindowsAgent
+    } else {
+        $SshStartedError = Start-SshPoshAgent
+    }
+
+    If ($SshStartedError) {
+        Write-Warning "SSH Agent not found or problem starting agent: $($SshStartedError) Skipping ssh key load..."
+        return
+    } else {
+        $loadedKeys = Add-SshKey -l
+        ForEach ($item in Get-ChildItem ~/.ssh *.pub) {
+            
+            $privateKeyName = $item.BaseName
+            if ($loadedKeys -match $privateKeyName) {
+                # TODO: Why doesn't -not or -notmatch work here?
+            } else {
+                Add-SshKey ~/.ssh/$($privateKeyName)
+            }
         }
     }
-} else {
-    Write-Warning "SSH Agent not found. Skipping ssh key load..."
 }
+
+Start-Ssh
 
 # Docker
 Import-Module posh-docker
