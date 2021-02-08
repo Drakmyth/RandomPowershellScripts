@@ -3,7 +3,7 @@ Random Powershell Scripts
 This repository contains various and arbitrary PowerShell scripts. Some of these I use regularly and are here so I can access them easily. Others are experiments that I may want to refer to in the future. Nothing in this repository has any guarantees to its functionality, stability, or quality.
 
 Issues
---------------------
+------
 If you notice a bug in one of the scripts feel free to open an issue for it, but unless you also provide a pull request to fix it don't expect a timely resolution. If it's not a bug I often run into personally, it's unlikely I'm going to spend time fixing it.
 
 Feature Requests

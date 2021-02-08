@@ -1,0 +1,3 @@
+AWS Scripts
+===========
+These scripts were created circa 2016 for use in Octopus Deploy to do things that the AWS CLI and SDK didn't make easy. They are also some of the first PowerShell scripts I'd ever written. The big block of variables at the top of the file is to allow for local execution, but note that these scripts do not behave as good PowerShell scripts should (in particular, Write-Host and Write-Output are used extremely incorrectly). The AWS SDK/CLI may have better ways of performing these tasks now.
