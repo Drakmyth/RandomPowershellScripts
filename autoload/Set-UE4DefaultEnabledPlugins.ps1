@@ -9,6 +9,10 @@ function Set-UE4DefaultEnabledPlugins {
     )
 
     Begin {
+        if ($PSVersionTable.PSVersion.Major -lt 6) {
+            throw "Requires PowerShell 6.x or higher. Please update or complain to Epic that their *.uplugin files are invalid JSON."
+        }
+
         $editorPath = [IO.Path]::Combine($Path,"Engine","Binaries","Win64","UE4Editor.exe")
         $editorPathFound = Test-Path -Path $editorPath -PathType Leaf
         if (-not $editorPathFound) {
