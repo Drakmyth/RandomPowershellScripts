@@ -47,7 +47,7 @@ function Set-UE4DefaultEnabledPlugins {
 
             Add-Member -InputObject $plugin -MemberType NoteProperty -Name "EnabledByDefault" -Value $enableByDefault -Force
             
-            $content = $plugin | ConvertTo-Json
+            $content = $plugin | ConvertTo-Json -Depth 1024
             $content | Set-Content -Path $_.FullName
 
             $i++
