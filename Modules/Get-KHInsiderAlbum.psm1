@@ -9,7 +9,7 @@
         The full link to the album page (e.g. "https://downloads.khinsider.com/game-soundtracks/album/link-s-awakening-dx")
 #>
 
-function Download-Album{
+function Get-KHInsiderAlbum{
     [CmdletBinding()]
     param([Parameter(Mandatory=$true, ValueFromPipelineByPropertyName=$true, Position=0)]
           [ValidateScript({ if (Test-Path $_) { $true } else { throw "$_ does not exist." }})]

@@ -2,7 +2,7 @@ Autoload Scripts
 ================
 These scripts mostly consist of advanced functions (CmdletBindings) that are intended to be loaded into an environment rather than run directly from the script file. Summaries are as follows with rough creation years to indicate age (and my lack of experience at time of creation):
 
-Download-Album.ps1 (2017)
+Get-KHInsiderAlbum.ps1 (2017)
 -------------------------
 https://downloads.khinsider.com/ hosts mp3 soundtracks for a wide selection of modern and (more importantly) retro video games. Unfortunately, you must register an account to download a full album at a time, and most browsers limit the number of concurrent downloads you can have running. I didn't want to have to register an account and being limited to downloading 5 songs at a time was annoying, so I wrote this script. With this you specify the album link and come back when it's done. Should still work as long as khinsider hasn't changed their site layout and hasn't been sued into oblivion for copyright violations.
 
